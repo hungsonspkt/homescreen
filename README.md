@@ -1,7 +1,7 @@
 This project contains:
 
 HomeScreen: AGL Home Screen reference implementation
-HS HERE
+HS HERE 002
 **AGL repo for source code**
 
 ```
