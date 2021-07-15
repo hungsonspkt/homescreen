@@ -25,7 +25,6 @@
 #include <QtQml/qqml.h>
 #include <QQuickWindow>
 #include <QTimer>
-#include <QSerialPort>
 
 
 #include <weather.h>
@@ -42,6 +41,14 @@
 
 #include "wayland-agl-shell-client-protocol.h"
 #include "shell.h"
+
+#include <stdio.h>      // standard input / output functions
+#include <stdlib.h>
+#include <string.h>     // string function definitions
+#include <unistd.h>     // UNIX standard function definitions
+#include <fcntl.h>      // File control definitions
+#include <errno.h>      // Error number definitions
+#include <termios.h>    // POSIX terminal control definitions
 
 static void
 global_add(void *data, struct wl_registry *reg, uint32_t name,
@@ -212,11 +219,7 @@ int main(int argc, char *argv[])
     const char *screen_name;
     bool is_demo_val = false;
 
-
-
-    QSerialPort serialPort;
-    serialPort.setPortName("/dev/ttyS0");
-    serialPort.setBaudRate(115200);
+    int USB = open( "/dev/ttyS0", O_RDWR| O_NOCTTY );
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
     struct agl_shell *agl_shell = nullptr;
