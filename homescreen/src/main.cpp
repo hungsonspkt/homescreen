@@ -25,6 +25,8 @@
 #include <QtQml/qqml.h>
 #include <QQuickWindow>
 #include <QTimer>
+#include <QSerialPort>
+
 
 #include <weather.h>
 #include <bluetooth.h>
@@ -209,6 +211,12 @@ int main(int argc, char *argv[])
     QGuiApplication a(argc, argv);
     const char *screen_name;
     bool is_demo_val = false;
+
+
+
+    QSerialPort serialPort;
+    serialPort.setPortName("/dev/ttyS0");
+    serialPort.setBaudRate(115200);
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
     struct agl_shell *agl_shell = nullptr;
