@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
 
 	/* Error Handling */
 	if ( tcgetattr ( USB, &tty ) != 0 ) {
-	   std::cout << "Error " << errno << " from tcgetattr: " << strerror(errno) << std::endl;
+	   printf("error tcgetattr\n");
 	}
 
 	/* Save old tty parameters */
