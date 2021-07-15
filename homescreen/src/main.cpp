@@ -212,6 +212,13 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 	});
 }
 
+void MyTimerSlot()
+{
+    qDebug() << "Timer...";
+}
+
+QTimer *timer;
+
 int main(int argc, char *argv[])
 {
     setenv("QT_QPA_PLATFORM", "wayland", 1);
@@ -255,6 +262,13 @@ int main(int argc, char *argv[])
 	if ( tcsetattr ( USB, TCSANOW, &tty ) != 0) {
 	   printf("flush serial bufer failed\n");
 	}
+
+
+	timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()),
+          this, SLOT(MyTimerSlot()));
+    timer->start(1000);
+
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
     struct agl_shell *agl_shell = nullptr;
