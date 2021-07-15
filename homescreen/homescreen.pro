@@ -15,7 +15,7 @@
 
 TEMPLATE = app
 TARGET = HomeScreen
-QT = qml quick websockets gui-private serialport
+QT = qml quick websockets gui-private
 CONFIG += c++11 link_pkgconfig wayland-scanner
 DESTDIR = $${OUT_PWD}/../package/root/bin
 PKGCONFIG += qtappfw-weather qtappfw-network qtappfw-bt afb-helpers-qt wayland-client json-c
