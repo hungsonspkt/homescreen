@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 	/* Flush Port, then applies attributes */
 	tcflush( USB, TCIFLUSH );
 	if ( tcsetattr ( USB, TCSANOW, &tty ) != 0) {
-	   std::cout << "Error " << errno << " from tcsetattr" << std::endl;
+	   printf("flush serial bufer failed\n");
 	}
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
