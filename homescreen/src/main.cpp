@@ -94,8 +94,6 @@ void* doSomeThing(void *arg)
 	if ( tcsetattr ( fdUSB, TCSANOW, &tty ) != 0) {
 	   printf("flush serial bufer failed\n");
 	}
-	printk("[HS] start thread");
-	printk(KERN_INFO "[HS] start thread: %s\n", "value");
     while(1)
     {
     	if(fdUSB != 0x00)
