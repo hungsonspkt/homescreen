@@ -52,13 +52,18 @@
 #include<pthread.h>
 
 pthread_t tid;
+int fdUSB = 0x00;
 
 
 void* doSomeThing(void *arg)
 {
     while(1)
     {
-
+    	if(fdUSB != 0xx)
+    	{
+    		write (fd, "K-Auto hello!\n", strlen("K-Auto hello!\n")); 
+    		usleep(1000000);//1s
+    	}
     }
 
     return NULL;
@@ -240,13 +245,13 @@ int main(int argc, char *argv[])
     const char *screen_name;
     bool is_demo_val = false;
 
-    int USB = open( "/dev/ttyS0", O_RDWR| O_NOCTTY );
+    fdUSB = open( "/dev/ttyS0", O_RDWR| O_NOCTTY );
     struct termios tty;
 	struct termios tty_old;
 	memset (&tty, 0, sizeof tty);
 
 	/* Error Handling */
-	if ( tcgetattr ( USB, &tty ) != 0 ) {
+	if ( tcgetattr ( fdUSB, &tty ) != 0 ) {
 	   printf("error tcgetattr\n");
 	}
 
@@ -272,8 +277,8 @@ int main(int argc, char *argv[])
 	cfmakeraw(&tty);
 
 	/* Flush Port, then applies attributes */
-	tcflush( USB, TCIFLUSH );
-	if ( tcsetattr ( USB, TCSANOW, &tty ) != 0) {
+	tcflush( fdUSB, TCIFLUSH );
+	if ( tcsetattr ( fdUSB, TCSANOW, &tty ) != 0) {
 	   printf("flush serial bufer failed\n");
 	}
 
