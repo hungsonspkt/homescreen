@@ -54,7 +54,7 @@
 pthread_t tid;
 
 
-void* doSomeThing()
+void* doSomeThing(void *arg)
 {
     while(1)
     {
