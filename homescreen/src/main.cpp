@@ -59,7 +59,7 @@ void* doSomeThing(void *arg)
 {
     while(1)
     {
-    	if(fdUSB != 0xx)
+    	if(fdUSB != 0x00)
     	{
     		write (fd, "K-Auto hello!\n", strlen("K-Auto hello!\n")); 
     		usleep(1000000);//1s
