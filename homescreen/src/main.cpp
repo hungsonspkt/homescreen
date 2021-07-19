@@ -49,6 +49,20 @@
 #include <fcntl.h>      // File control definitions
 #include <errno.h>      // Error number definitions
 #include <termios.h>    // POSIX terminal control definitions
+#include<pthread.h>
+
+pthread_t tid[2];
+
+
+void* doSomeThing()
+{
+    while(1)
+    {
+
+    }
+
+    return NULL;
+}
 
 static void
 global_add(void *data, struct wl_registry *reg, uint32_t name,
@@ -264,10 +278,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),
-          this, SLOT(MyTimerSlot()));
-    timer->start(1000);
+	pthread_create(&(tid[0]), NULL, &doSomeThing, NULL);
 
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
