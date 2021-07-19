@@ -51,7 +51,7 @@
 #include <termios.h>    // POSIX terminal control definitions
 #include<pthread.h>
 
-pthread_t tid[2];
+pthread_t tid;
 
 
 void* doSomeThing()
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	pthread_create(&(tid[0]), NULL, &doSomeThing, NULL);
+	pthread_create(&tid, NULL, &doSomeThing, NULL);
 
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
