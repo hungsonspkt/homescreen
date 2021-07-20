@@ -54,10 +54,8 @@
 pthread_t tid;
 int fdUSB = 0x00;
 
-
-void* doSomeThing(void *arg)
+void printserial()
 {
-	usleep(30000000);//30s
 	fdUSB = open( "/dev/ttyS0", O_RDWR| O_NOCTTY );
     struct termios tty;
 	struct termios tty_old;
@@ -66,6 +64,7 @@ void* doSomeThing(void *arg)
 	/* Error Handling */
 	if ( tcgetattr ( fdUSB, &tty ) != 0 ) {
 	   printf("error tcgetattr\n");
+	   return;
 	}
 
 	/* Save old tty parameters */
@@ -93,14 +92,24 @@ void* doSomeThing(void *arg)
 	tcflush( fdUSB, TCIFLUSH );
 	if ( tcsetattr ( fdUSB, TCSANOW, &tty ) != 0) {
 	   printf("flush serial bufer failed\n");
+	   return;
 	}
+	if(fdUSB != 0x00)
+	{
+		write (fdUSB, "K-Auto hello!\n", strlen("K-Auto hello!\n")); 
+	}
+	close(fdUSB);
+	fdUSB = 0x00;
+}
+
+void* doSomeThing(void *arg)
+{
+	usleep(10000000);//10s
+	
     while(1)
     {
-    	if(fdUSB != 0x00)
-    	{
-    		write (fdUSB, "K-Auto hello!\n", strlen("K-Auto hello!\n")); 
-    		usleep(10000);//1s
-    	}
+    	usleep(1000000);//1s
+    	printserial();
     }
 
     return NULL;
