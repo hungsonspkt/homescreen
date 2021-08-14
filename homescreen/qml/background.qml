@@ -8,8 +8,14 @@ Window {
     flags: Qt.FramelessWindowHint
     visible: true
 
+//    Image {
+//        anchors.fill: parent
+//        source: './images/AGL_HMI_Blue_Background_NoCar-01.png'
+//    }
+
     Image {
-        anchors.fill: parent
-        source: './images/AGL_HMI_Blue_Background_NoCar-01.png'
+        id: kimage
+        anchors.centerIn: parent
+        source: "qrc:/images/k_images/k-auto.png"
     }
 }

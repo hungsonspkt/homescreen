@@ -16,5 +16,6 @@
         <file>background_demo.qml</file>
         <file>toppanel_demo.qml</file>
         <file>bottompanel_demo.qml</file>
+        <file>images/k_images/k-auto.png</file>
     </qresource>
 </RCC>
