@@ -375,7 +375,17 @@ int main(int argc, char *argv[])
     /* instead of loading main.qml we load one-by-one each of the QMLs,
      * divided now between several surfaces: panels, background.
      */
-    load_agl_shell_app(native, &engine, agl_shell, bindingAddress, screen_name, is_demo_val);
+
+    const QUrl url(QStringLiteral("qrc:/background.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                     &a, [url](QObject *obj, const QUrl &objUrl) {
+        if (!obj && url == objUrl)
+            QCoreApplication::exit(-1);
+    }, Qt::QueuedConnection);
+    engine.load(url);
+
+
+    //load_agl_shell_app(native, &engine, agl_shell, bindingAddress, screen_name, is_demo_val);
 
     return a.exec();
 }
