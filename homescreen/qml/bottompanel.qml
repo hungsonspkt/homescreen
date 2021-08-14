@@ -7,45 +7,53 @@ Window {
     height: 216
     flags: Qt.FramelessWindowHint
     visible: true
-    color: "#33363a"
+    color: "blue"
+//    color: "#33363a"
 
-    MediaArea {
-    }
-
-    Timer {
-        id:informationTimer
-        interval: 3000
-        running: false
-        repeat: true
-        onTriggered: {
-            bottomInformation.visible = false
-        }
-    }
-
-    Item {
-        id: bottomInformation
-        width: parent.width
-        height: 216
+    Image {
+        id: kimage
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
-        visible: false
-        Text {
-            id: bottomText
-            anchors.centerIn: parent
-            font.pixelSize: 25
-            font.letterSpacing: 5
-            horizontalAlignment: Text.AlignHCenter
-            color: "white"
-            text: ""
-            z:1
-        }
+        source: "qrc:/images/k_images/k-auto.png"
     }
 
-    Connections {
-        target: homescreenHandler
-        onShowInformation: {
-            bottomText.text = info
-            bottomInformation.visible = true
-            informationTimer.restart()
-        }
-    }
+//    MediaArea {
+//    }
+
+//    Timer {
+//        id:informationTimer
+//        interval: 3000
+//        running: false
+//        repeat: true
+//        onTriggered: {
+//            bottomInformation.visible = false
+//        }
+//    }
+
+//    Item {
+//        id: bottomInformation
+//        width: parent.width
+//        height: 216
+//        anchors.bottom: parent.bottom
+//        visible: false
+//        Text {
+//            id: bottomText
+//            anchors.centerIn: parent
+//            font.pixelSize: 25
+//            font.letterSpacing: 5
+//            horizontalAlignment: Text.AlignHCenter
+//            color: "white"
+//            text: ""
+//            z:1
+//        }
+//    }
+
+//    Connections {
+//        target: homescreenHandler
+//        onShowInformation: {
+//            bottomText.text = info
+//            bottomInformation.visible = true
+//            informationTimer.restart()
+//        }
+//    }
 }

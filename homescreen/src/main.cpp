@@ -236,14 +236,14 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 		QQmlComponent bg_comp(engine, QUrl("qrc:/background.qml"));
 		qInfo() << bg_comp.errors();
 
-//		QQmlComponent top_comp(engine, QUrl("qrc:/toppanel.qml"));
-//		qInfo() << top_comp.errors();
+        QQmlComponent top_comp(engine, QUrl("qrc:/toppanel.qml"));
+        qInfo() << top_comp.errors();
 
-//		QQmlComponent bot_comp(engine, QUrl("qrc:/bottompanel.qml"));
-//		qInfo() << bot_comp.errors();
+        QQmlComponent bot_comp(engine, QUrl("qrc:/bottompanel.qml"));
+        qInfo() << bot_comp.errors();
 
-//		top = create_component(native, &top_comp, screen, &qobj_top);
-//		bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
+        top = create_component(native, &top_comp, screen, &qobj_top);
+        bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
 		bg = create_component(native, &bg_comp, screen, &qobj_bg);
 	}
 
