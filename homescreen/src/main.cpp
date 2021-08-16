@@ -51,70 +51,6 @@
 #include <termios.h>    // POSIX terminal control definitions
 #include<pthread.h>
 
-pthread_t tid;
-int fdUSB = 0x00;
-
-void printserial()
-{
-	fdUSB = open( "/dev/ttyS0", O_RDWR| O_NOCTTY );
-    struct termios tty;
-	struct termios tty_old;
-	memset (&tty, 0, sizeof tty);
-
-	/* Error Handling */
-	if ( tcgetattr ( fdUSB, &tty ) != 0 ) {
-	   printf("error tcgetattr\n");
-	   return;
-	}
-
-	/* Save old tty parameters */
-	tty_old = tty;
-
-	/* Set Baud Rate */
-	cfsetospeed (&tty, (speed_t)B115200);
-	cfsetispeed (&tty, (speed_t)B115200);
-
-	/* Setting other Port Stuff */
-	tty.c_cflag     &=  ~PARENB;            // Make 8n1
-	tty.c_cflag     &=  ~CSTOPB;
-	tty.c_cflag     &=  ~CSIZE;
-	tty.c_cflag     |=  CS8;
-
-	tty.c_cflag     &=  ~CRTSCTS;           // no flow control
-	tty.c_cc[VMIN]   =  1;                  // read doesn't block
-	tty.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
-	tty.c_cflag     |=  CREAD | CLOCAL;     // turn on READ & ignore ctrl lines
-
-	/* Make raw */
-	cfmakeraw(&tty);
-
-	/* Flush Port, then applies attributes */
-	tcflush( fdUSB, TCIFLUSH );
-	if ( tcsetattr ( fdUSB, TCSANOW, &tty ) != 0) {
-	   printf("flush serial bufer failed\n");
-	   return;
-	}
-	if(fdUSB != 0x00)
-	{
-		write (fdUSB, "K-Auto hello!\n", strlen("K-Auto hello!\n")); 
-	}
-	close(fdUSB);
-	fdUSB = 0x00;
-}
-
-void* doSomeThing(void *arg)
-{
-	usleep(10000000);//10s
-	
-    while(1)
-    {
-    	usleep(1000000);//1s
-    	printserial();
-    }
-
-    return NULL;
-}
-
 static void
 global_add(void *data, struct wl_registry *reg, uint32_t name,
 	   const char *interface, uint32_t)
@@ -264,15 +200,15 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 		statusBar->init(bindingAddress, engine->rootContext());
 	}
 
-	agl_shell_set_panel(agl_shell, top, output, AGL_SHELL_EDGE_TOP);
-	agl_shell_set_panel(agl_shell, bottom, output, AGL_SHELL_EDGE_BOTTOM);
-	qDebug() << "Setting homescreen to screen  " << screen->name();
+    agl_shell_set_panel(agl_shell, top, output, AGL_SHELL_EDGE_TOP);
+    agl_shell_set_panel(agl_shell, bottom, output, AGL_SHELL_EDGE_BOTTOM);
+    qDebug() << "Setting homescreen to screen  " << screen->name();
 
 	agl_shell_set_background(agl_shell, bg, output);
 
 	/* Delay the ready signal until after Qt has done all of its own setup
 	 * in a.exec() */
-	QTimer::singleShot(500, [agl_shell](){
+    QTimer::singleShot(10000, [agl_shell](){
 		agl_shell_ready(agl_shell);
 	});
 }
@@ -291,17 +227,13 @@ int main(int argc, char *argv[])
     const char *screen_name;
     bool is_demo_val = false;
 
-
-	pthread_create(&tid, NULL, &doSomeThing, NULL);
-
-
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
     struct agl_shell *agl_shell = nullptr;
     screen_name = getenv("HOMESCREEN_START_SCREEN");
 
     const char *is_demo = getenv("HOMESCREEN_DEMO_CI");
     if (is_demo && strcmp(is_demo, "1") == 0)
-	    is_demo_val = true;
+        is_demo_val = true;
 
     QCoreApplication::setOrganizationDomain("LinuxFoundation");
     QCoreApplication::setOrganizationName("AutomotiveGradeLinux");
@@ -331,9 +263,9 @@ int main(int argc, char *argv[])
 
     agl_shell = register_agl_shell(native);
     if (!agl_shell) {
-	    fprintf(stderr, "agl_shell extension is not advertised. "
-			    "Are you sure that agl-compositor is running?\n");
-	    exit(EXIT_FAILURE);
+        fprintf(stderr, "agl_shell extension is not advertised. "
+                "Are you sure that agl-compositor is running?\n");
+        exit(EXIT_FAILURE);
     }
 
     std::shared_ptr<struct agl_shell> shell{agl_shell, agl_shell_destroy};
@@ -376,16 +308,16 @@ int main(int argc, char *argv[])
      * divided now between several surfaces: panels, background.
      */
 
-    const QUrl url(QStringLiteral("qrc:/background.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &a, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
+//    const QUrl url(QStringLiteral("qrc:/background.qml"));
+//    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+//                     &a, [url](QObject *obj, const QUrl &objUrl) {
+//        if (!obj && url == objUrl)
+//            QCoreApplication::exit(-1);
+//    }, Qt::QueuedConnection);
+//    engine.load(url);
 
 
-    //load_agl_shell_app(native, &engine, agl_shell, bindingAddress, screen_name, is_demo_val);
+    load_agl_shell_app(native, &engine, agl_shell, bindingAddress, screen_name, is_demo_val);
 
     return a.exec();
 }
