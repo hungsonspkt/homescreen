@@ -1,0 +1,15 @@
+[Unit]
+Description=AGL App Framework Binder for HomeScreen
+Requires=dbus.service afm-user-daemon.service
+After=afm-user-daemon.service
+
+[Service]
+User=root
+Type=dbus
+BusName=org.agl.homescreenappframeworkbinder
+ExecStart=/usr/AGL/homescreen/HomeScreenAppFrameworkBinderAGL
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

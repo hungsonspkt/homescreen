@@ -18,7 +18,6 @@
 #define STATUSBARMODEL_H
 
 #include <QtCore/QAbstractListModel>
-#include <QtQml/QQmlContext>
 
 class StatusBarModel : public QAbstractListModel
 {
@@ -27,21 +26,14 @@ public:
     explicit StatusBarModel(QObject *parent = NULL);
     ~StatusBarModel();
 
-    void init(QUrl &url, QQmlContext *context);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    // slots
-    void onWifiConnectedChanged(bool connected);
-    void onWifiEnabledChanged(bool enabled);
-    void onWifiStrengthChanged(int strength);
-
 private:
     class Private;
     Private *d;
-    void setWifiStatus(bool connected, bool enabled, int strength);
 };
 
 #endif // STATUSBARMODEL_H

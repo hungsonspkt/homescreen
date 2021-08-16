@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2016 The Qt Company Ltd.
  * Copyright (C) 2016, 2017 Mentor Graphics Development (Deutschland) GmbH
- * Copyright (c) 2017 TOYOTA MOTOR CORPORATION
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +19,30 @@
 #define APPLICATIONLAUNCHER_H
 
 #include <QtCore/QObject>
-
-class QTimer;
+#include <include/appframework.hpp>
+#include <appframework_proxy.h>
 
 class ApplicationLauncher : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool launching READ isLaunching NOTIFY launchingChanged)
     Q_PROPERTY(QString current READ current WRITE setCurrent NOTIFY currentChanged)
 public:
     explicit ApplicationLauncher(QObject *parent = NULL);
+    ~ApplicationLauncher();
 
-    bool isLaunching() const;
     QString current() const;
 
 signals:
     void newAppRequestsToBeVisible(int pid);
-    void launchingChanged(bool launching);
     void currentChanged(const QString &current);
 
 public slots:
+    int launch(const QString &application);
     void setCurrent(const QString &current);
 
 private:
-    void setLaunching(bool launching);
-
-private:
-    bool m_launching;
+    org::agl::appframework *mp_dBusAppFrameworkProxy;
     QString m_current;
-    QTimer *m_timeout;
 };
 
 #endif // APPLICATIONLAUNCHER_H

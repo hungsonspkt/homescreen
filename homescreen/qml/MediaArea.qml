@@ -16,11 +16,12 @@
  */
 
 import QtQuick 2.2
-import QtQuick.Controls 2.0
+import QtQuick.Controls 1.0
 
 StackView {
     id: root
-    anchors.fill: parent
+    width: 1080
+    height: 215
 
     initialItem: blank
 

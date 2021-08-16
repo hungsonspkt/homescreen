@@ -16,6 +16,7 @@
  */
 
 #include "statusbarserver.h"
+#include "statusbar_adaptor.h"
 
 class StatusBarServer::Private
 {
@@ -23,9 +24,11 @@ public:
     Private(StatusBarServer *parent);
     QString texts[SupportedCount];
     QString icons[SupportedCount];
+    StatusbarAdaptor adaptor;
 };
 
 StatusBarServer::Private::Private(StatusBarServer *parent)
+    : adaptor(parent)
 {
     icons[0] = QStringLiteral("qrc:/images/Status/HMI_Status_Wifi_NoBars-01.png");
     icons[1] = QStringLiteral("qrc:/images/Status/HMI_Status_Bluetooth_Inactive-01.png");

@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2016 The Qt Company Ltd.
  * Copyright (C) 2016, 2017 Mentor Graphics Development (Deutschland) GmbH
- * Copyright (c) 2017, 2018, 2019 TOYOTA MOTOR CORPORATION
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,30 +17,28 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
 
 Item {
     id: root
+    width: 785
+    height: 218
+
 
     ListModel {
         id: applicationModel
         ListElement {
-            appid: 'launcher'
-            name: 'launcher'
-            application: 'launcher@0.1'
+            name: 'Home'
+            application: ''
         }
         ListElement {
-            appid: 'mediaplayer'
-            name: 'MediaPlayer'
+            name: 'Multimedia'
             application: 'mediaplayer@0.1'
         }
         ListElement {
-            appid: 'hvac'
             name: 'HVAC'
             application: 'hvac@0.1'
         }
         ListElement {
-            appid: 'navigation'
             name: 'Navigation'
             application: 'navigation@0.1'
         }
@@ -51,19 +48,35 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: 2
         Repeater {
             model: applicationModel
             delegate: ShortcutIcon {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 name: model.name
-                active: model.name === launcher.current
+                active: model.application === launcher.current
                 onClicked: {
-                    console.log("Activating: " + model.appid)
-                    homescreenHandler.tapShortcut(model.appid)
+                    if (0 === model.index) {
+                        appLauncherAreaLauncher.visible = true
+                        applicationArea.visible = false
+                        layoutHandler.hideAppLayer()
+                        launcher.current = ''
+                    }
+                    else {
+                        pid = launcher.launch(model.application)
+                        if (1 < pid) {
+                            applicationArea.visible = true
+                            appLauncherAreaLauncher.visible = false
+                            layoutHandler.makeMeVisible(pid)
+                            layoutHandler.showAppLayer(pid)
+                        }
+                        else {
+                            console.warn("app cannot be launched!")
+                        }
+                    }
                 }
             }
-       }
+        }
     }
 }

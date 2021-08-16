@@ -16,118 +16,14 @@
  */
 
 import QtQuick 2.2
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
-import AGL.Demo.Controls 1.0
-import MasterVolume 1.0
 
 Image {
-    anchors.fill: parent
-    source: './images/Utility_Logo_Background-01.svg'
-    property bool displayVolume: false;
-
-    MouseArea {
-        anchors.fill: parent
-        function enableVolumeDisplay() {
-            if (!displayVolume) {
-                displayVolume = true
-                master_volume.visible = true
-                volume_timer.restart()
-            }
-        }
-        onClicked: enableVolumeDisplay()
-    }
+    width: 1080
+    height: 215
+    source: './images/Utility_Logo_Background-01.png'
 
     Image {
-        id: logo_image
         anchors.centerIn: parent
-        source: './images/Utility_Logo_Grey-01.svg'
-    }
-
-    Timer {
-        id: volume_timer
-        interval: 3000; running: false; repeat: false
-        onTriggered: displayVolume = false
-    }
-
-    states: [
-    State { when: displayVolume;
-    PropertyChanges { target: master_volume; opacity: 1.0 }
-    PropertyChanges { target: slider; enabled: true }
-    PropertyChanges { target: logo_image; opacity: 0.0 }
-    PropertyChanges { target: speech_chrome; visible: false }
-    },
-    State { when: !displayVolume;
-    PropertyChanges { target: master_volume; opacity: 0.0 }
-    PropertyChanges { target: slider; enabled: false }
-    PropertyChanges { target: logo_image; opacity: 1.0 }
-    PropertyChanges { target: speech_chrome; visible: speech_chrome.agentPresent }
-    }
-    ]
-
-    transitions: Transition {
-    NumberAnimation { property: "opacity"; duration: 500}
-    }
-
-    MasterVolume {
-        id: mv
-        objectName: "mv"
-        onVolumeChanged: slider.value = volume
-        Component.onCompleted: {
-            mv.open(bindingAddress);
-        }
-    }
-
-    Item {
-        id: master_volume
-        anchors.fill: parent
-        anchors.centerIn: parent
-        visible: false
-
-        Label {
-            font.pixelSize: 36
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: "white"
-            text: qsTr("Master Volume")
-        }
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.centerIn: parent
-            anchors.margins: 20
-            spacing: 20
-            Label {
-                font.pixelSize: 36
-                color: "white"
-                text: "0 %"
-            }
-            Slider {
-                id: slider
-                Layout.fillWidth: true
-                from: 0
-                to: 100
-                stepSize: 1
-                snapMode: Slider.SnapOnRelease
-                onValueChanged: mv.volume = value
-                Component.onCompleted: value = mv.volume
-                onPressedChanged: {
-                    if (pressed) {volume_timer.stop()}
-                    else {volume_timer.restart()}
-                }
-            }
-            Label {
-                font.pixelSize: 36
-                color: "white"
-                text: "100 %"
-            }
-        }
-    }
-
-    SpeechChrome {
-        id: speech_chrome
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: parent.height
+        source: './images/Utility_Logo_Colour-01.png'
     }
 }
