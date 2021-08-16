@@ -17,11 +17,11 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 2.0
 
 Image {
     width: 1080
-    height: 215
+    height: 216
     source: './images/Utility_Music_Background-01.png'
 
     ColumnLayout {

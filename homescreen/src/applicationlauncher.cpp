@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2016 The Qt Company Ltd.
  * Copyright (C) 2016, 2017 Mentor Graphics Development (Deutschland) GmbH
+ * Copyright (c) 2017 TOYOTA MOTOR CORPORATION
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +16,43 @@
  * limitations under the License.
  */
 
+#include <QtCore/QTimer>
+
 #include "applicationlauncher.h"
 
-#include <QtCore/QDebug>
+#include "hmi-debug.h"
 
 ApplicationLauncher::ApplicationLauncher(QObject *parent)
-    : QObject(parent),
-    mp_dBusAppFrameworkProxy()
+    : QObject(parent)
+    , m_launching(false)
+    , m_timeout(new QTimer(this))
 {
-    qDebug("D-Bus: connect to org.agl.homescreenappframeworkbinder /AppFramework");
-    mp_dBusAppFrameworkProxy = new org::agl::appframework("org.agl.homescreenappframeworkbinder",
-                                              "/AppFramework",
-                                              QDBusConnection::sessionBus(),
-                                              0);
+    m_timeout->setInterval(3000);
+    m_timeout->setSingleShot(true);
+    connect(m_timeout, &QTimer::timeout, [&]() {
+        setLaunching(false);
+    });
+    connect(this, &ApplicationLauncher::launchingChanged, [&](bool launching) {
+        if (launching)
+            m_timeout->start();
+        else
+            m_timeout->stop();
+    });
+    connect(this, &ApplicationLauncher::currentChanged, [&]() {
+        setLaunching(false);
+    });
 }
 
-ApplicationLauncher::~ApplicationLauncher()
+bool ApplicationLauncher::isLaunching() const
 {
-    delete mp_dBusAppFrameworkProxy;
+    return m_launching;
 }
 
-int ApplicationLauncher::launch(const QString &application)
+void ApplicationLauncher::setLaunching(bool launching)
 {
-    int result = -1;
-    qDebug() << "launch" << application;
-
-    result = mp_dBusAppFrameworkProxy->launchApp(application);
-    qDebug() << "pid:" << result;
-
-    if (result > 1) {
-        setCurrent(application);
-    }
-    return result;
+    if (m_launching == launching) return;
+    m_launching = launching;
+    launchingChanged(launching);
 }
 
 QString ApplicationLauncher::current() const
