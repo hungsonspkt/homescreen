@@ -22,6 +22,7 @@ import QtQuick.Window 2.2
 
 Item {
     id: root
+    property int valueChange: 0
 
     ListModel {
         id: applicationModel
@@ -53,6 +54,7 @@ Item {
         anchors.fill: parent
         spacing: 0
         Repeater {
+            id: repeaterlist
             model: applicationModel
             delegate: ShortcutIcon {
                 Layout.fillWidth: true
@@ -66,4 +68,18 @@ Item {
             }
        }
     }
+
+    Timer{
+        running: true
+        interval: 5000
+        repeat: true
+        onTriggered: {
+            console.log("Activating: " + applicationModel.get(valueChange).appid)
+            homescreenHandler.tapShortcut(applicationModel.get(valueChange).appid)
+            if(valueChange < 3) valueChange ++;
+            else valueChange = 0;
+
+        }
+    }
+
 }
