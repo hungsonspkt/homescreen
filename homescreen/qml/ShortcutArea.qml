@@ -75,9 +75,10 @@ Item {
         repeat: true
         onTriggered: {
             console.log("Activating: " + applicationModel.get(valueChange).appid)
-            homescreenHandler.tapShortcut(applicationModel.get(valueChange).appid)
-            if(valueChange < 3) valueChange ++;
-            else valueChange = 0;
+             if(valueChange == 3) homescreenHandler.tapShortcut("bb");
+             else homescreenHandler.tapShortcut(applicationModel.get(valueChange).appid)
+//            if(valueChange < 3) valueChange ++;
+//            else valueChange = 0;
 
         }
     }

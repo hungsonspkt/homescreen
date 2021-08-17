@@ -113,11 +113,11 @@ void HomescreenHandler::tapShortcut(QString application_id)
 	// the first time. Later calls to HomescreenHandler::tapShortcut will
 	// require calling 'agl_shell_activate_app'
 
-//    agl_shell_activate_app(agl_shell, application_id.toStdString().c_str(), output);
+    agl_shell_activate_app(agl_shell, application_id.toStdString().c_str(), output);
 
-//	if (mp_launcher) {
-//		mp_launcher->setCurrent(application_id);
-//	}
+    if (mp_launcher) {
+        mp_launcher->setCurrent(application_id);
+    }
 }
 
 void HomescreenHandler::onRep_static(struct json_object* reply_contents)
