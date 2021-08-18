@@ -64,13 +64,27 @@ Item {
                 onClicked: {
                     console.log("Activating: " + model.appid)
                     homescreenHandler.tapShortcut(model.appid)
+                    testrec.x = mouseX
+                    testrec.y = mouseY
+                    testrec.visible = true
+                }
+                onReleased: {
+                    testrec.visible = false
                 }
             }
        }
     }
 
+    Rectangle{
+        id: testrec
+        width: 100
+        height: 100
+        color: "red"
+        visible: false
+    }
+
     Timer{
-        running: true
+        running: false
         interval: 5000
         repeat: true
         onTriggered: {

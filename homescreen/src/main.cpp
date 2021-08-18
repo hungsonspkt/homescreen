@@ -346,8 +346,8 @@ int main(int argc, char *argv[])
                                                  QLatin1String("SpeechChromeController is uncreatable."));
 
     ApplicationLauncher *launcher = new ApplicationLauncher();
-//    launcher->setCurrent(QStringLiteral("launcher"));
-    launcher->setCurrent(QStringLiteral("aaa"));
+    launcher->setCurrent(QStringLiteral("launcher"));
+//    launcher->setCurrent(QStringLiteral("aaa"));
     HomescreenHandler* homescreenHandler = new HomescreenHandler(aglShell, launcher);
     homescreenHandler->init(port, token.toStdString().c_str());
 
