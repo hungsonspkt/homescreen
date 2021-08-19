@@ -48,7 +48,10 @@ ApplicationWindow {
     }
 
     DashBoard{
-       anchors.fill: parent
+//       anchors.fill: parent
+        width: mainwindow.width
+        height: 720
+
     }
 
     onInterfaceOptionChanged:  setColorOption()
