@@ -214,9 +214,9 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 		   struct agl_shell *agl_shell, QUrl &bindingAddress,
 		   const char *screen_name, bool is_demo)
 {
-	struct wl_surface *bg, *top, *bottom;
+    struct wl_surface *bg, *top, *bottom, *left, *right;
 	struct wl_output *output;
-	QObject *qobj_bg, *qobj_top, *qobj_bottom;
+    QObject *qobj_bg, *qobj_top, *qobj_bottom, *qobj_left, *qobj_right;
 	QScreen *screen = nullptr;
 
 //	if (is_demo) {
@@ -243,8 +243,17 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 
 //        top = create_component(native, &top_comp, screen, &qobj_top);
 //        bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
+        QQmlComponent left_comp(engine, QUrl("qrc:/toppanel.qml"));
+        qInfo() << left_comp.errors();
+
+        QQmlComponent right_comp(engine, QUrl("qrc:/bottompanel.qml"));
+        qInfo() << right_comp.errors();
+
         QQmlComponent bg_comp(engine, QUrl("qrc:/background.qml"));
         qInfo() << bg_comp.errors();
+
+        left = create_component(native, &left_comp, screen, &qobj_left);
+        right = create_component(native, &right_comp, screen, &qobj_right);
 		bg = create_component(native, &bg_comp, screen, &qobj_bg);
 //	}
 
@@ -267,6 +276,8 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 
 //    agl_shell_set_panel(agl_shell, top, output, AGL_SHELL_EDGE_TOP);
 //    agl_shell_set_panel(agl_shell, bottom, output, AGL_SHELL_EDGE_BOTTOM);
+    agl_shell_set_panel(agl_shell, left, output, AGL_SHELL_EDGE_LEFT);
+    agl_shell_set_panel(agl_shell, right, output, AGL_SHELL_EDGE_RIGHT);
     qDebug() << "Setting homescreen to screen  " << screen->name();
 
 	agl_shell_set_background(agl_shell, bg, output);
