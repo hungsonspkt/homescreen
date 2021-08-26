@@ -26,7 +26,6 @@
 #include <QQuickWindow>
 #include <QTimer>
 
-
 #include <weather.h>
 #include <bluetooth.h>
 #include "applicationlauncher.h"
@@ -41,15 +40,6 @@
 
 #include "wayland-agl-shell-client-protocol.h"
 #include "shell.h"
-
-#include <stdio.h>      // standard input / output functions
-#include <stdlib.h>
-#include <string.h>     // string function definitions
-#include <unistd.h>     // UNIX standard function definitions
-#include <fcntl.h>      // File control definitions
-#include <errno.h>      // Error number definitions
-#include <termios.h>    // POSIX terminal control definitions
-#include<pthread.h>
 
 static void
 global_add(void *data, struct wl_registry *reg, uint32_t name,
@@ -150,53 +140,43 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 		   struct agl_shell *agl_shell, QUrl &bindingAddress,
 		   const char *screen_name, bool is_demo)
 {
-    struct wl_surface *bg, *top, *bottom, *left, *right;
+	struct wl_surface *bg, *top, *bottom;
 	struct wl_output *output;
-    QObject *qobj_bg, *qobj_top, *qobj_bottom, *qobj_left, *qobj_right;
+	QObject *qobj_bg, *qobj_top, *qobj_bottom;
 	QScreen *screen = nullptr;
 
-//	if (is_demo) {
-//		QQmlComponent bg_comp(engine, QUrl("qrc:/background_demo.qml"));
-//		qInfo() << bg_comp.errors();
+	if (is_demo) {
+		QQmlComponent bg_comp(engine, QUrl("qrc:/background_demo.qml"));
+		qInfo() << bg_comp.errors();
 
-//		QQmlComponent top_comp(engine, QUrl("qrc:/toppanel_demo.qml"));
-//		qInfo() << top_comp.errors();
+		QQmlComponent top_comp(engine, QUrl("qrc:/toppanel_demo.qml"));
+		qInfo() << top_comp.errors();
 
-//		QQmlComponent bot_comp(engine, QUrl("qrc:/bottompanel_demo.qml"));
-//		qInfo() << bot_comp.errors();
+		QQmlComponent bot_comp(engine, QUrl("qrc:/bottompanel_demo.qml"));
+		qInfo() << bot_comp.errors();
 
-//		top = create_component(native, &top_comp, screen, &qobj_top);
-//		bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
-//		bg = create_component(native, &bg_comp, screen, &qobj_bg);
-//	} else {
-
-
-//        QQmlComponent top_comp(engine, QUrl("qrc:/toppanel.qml"));
-//        qInfo() << top_comp.errors();
-
-//        QQmlComponent bot_comp(engine, QUrl("qrc:/bottompanel.qml"));
-//        qInfo() << bot_comp.errors();
-
-//        top = create_component(native, &top_comp, screen, &qobj_top);
-//        bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
-        QQmlComponent left_comp(engine, QUrl("qrc:/toppanel.qml"));
-        qInfo() << left_comp.errors();
-
-        QQmlComponent right_comp(engine, QUrl("qrc:/bottompanel.qml"));
-        qInfo() << right_comp.errors();
-
-        QQmlComponent bg_comp(engine, QUrl("qrc:/background.qml"));
-        qInfo() << bg_comp.errors();
-
-        left = create_component(native, &left_comp, screen, &qobj_left);
-        right = create_component(native, &right_comp, screen, &qobj_right);
+		top = create_component(native, &top_comp, screen, &qobj_top);
+		bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
 		bg = create_component(native, &bg_comp, screen, &qobj_bg);
-//	}
+	} else {
+		QQmlComponent bg_comp(engine, QUrl("qrc:/background.qml"));
+		qInfo() << bg_comp.errors();
 
-//	if (!screen_name)
+		QQmlComponent top_comp(engine, QUrl("qrc:/toppanel.qml"));
+		qInfo() << top_comp.errors();
+
+		QQmlComponent bot_comp(engine, QUrl("qrc:/bottompanel.qml"));
+		qInfo() << bot_comp.errors();
+
+		top = create_component(native, &top_comp, screen, &qobj_top);
+		bottom = create_component(native, &bot_comp, screen, &qobj_bottom);
+		bg = create_component(native, &bg_comp, screen, &qobj_bg);
+	}
+
+	if (!screen_name)
 		screen = qApp->primaryScreen();
-//	else
-//		screen = find_screen(screen_name);
+	else
+		screen = find_screen(screen_name);
 
 	qDebug() << "found primary screen " << qApp->primaryScreen()->name() <<
 		"first screen " << qApp->screens().first()->name();
@@ -210,21 +190,18 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 		statusBar->init(bindingAddress, engine->rootContext());
 	}
 
-//    agl_shell_set_panel(agl_shell, top, output, AGL_SHELL_EDGE_TOP);
-//    agl_shell_set_panel(agl_shell, bottom, output, AGL_SHELL_EDGE_BOTTOM);
-    agl_shell_set_panel(agl_shell, left, output, AGL_SHELL_EDGE_LEFT);
-    agl_shell_set_panel(agl_shell, right, output, AGL_SHELL_EDGE_RIGHT);
-    qDebug() << "Setting homescreen to screen  " << screen->name();
+	agl_shell_set_panel(agl_shell, top, output, AGL_SHELL_EDGE_TOP);
+	agl_shell_set_panel(agl_shell, bottom, output, AGL_SHELL_EDGE_BOTTOM);
+	qDebug() << "Setting homescreen to screen  " << screen->name();
 
 	agl_shell_set_background(agl_shell, bg, output);
 
 	/* Delay the ready signal until after Qt has done all of its own setup
 	 * in a.exec() */
-    QTimer::singleShot(10000, [agl_shell](){
+	QTimer::singleShot(500, [agl_shell](){
 		agl_shell_ready(agl_shell);
 	});
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -239,7 +216,7 @@ int main(int argc, char *argv[])
 
     const char *is_demo = getenv("HOMESCREEN_DEMO_CI");
     if (is_demo && strcmp(is_demo, "1") == 0)
-        is_demo_val = true;
+	    is_demo_val = true;
 
     QCoreApplication::setOrganizationDomain("LinuxFoundation");
     QCoreApplication::setOrganizationName("AutomotiveGradeLinux");
@@ -269,9 +246,9 @@ int main(int argc, char *argv[])
 
     agl_shell = register_agl_shell(native);
     if (!agl_shell) {
-        fprintf(stderr, "agl_shell extension is not advertised. "
-                "Are you sure that agl-compositor is running?\n");
-        exit(EXIT_FAILURE);
+	    fprintf(stderr, "agl_shell extension is not advertised. "
+			    "Are you sure that agl-compositor is running?\n");
+	    exit(EXIT_FAILURE);
     }
 
     std::shared_ptr<struct agl_shell> shell{agl_shell, agl_shell_destroy};
@@ -285,7 +262,6 @@ int main(int argc, char *argv[])
 
     ApplicationLauncher *launcher = new ApplicationLauncher();
     launcher->setCurrent(QStringLiteral("launcher"));
-//    launcher->setCurrent(QStringLiteral("aaa"));
     HomescreenHandler* homescreenHandler = new HomescreenHandler(aglShell, launcher);
     homescreenHandler->init(port, token.toStdString().c_str());
 
