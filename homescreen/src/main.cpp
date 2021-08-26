@@ -196,7 +196,7 @@ load_agl_shell_app(QPlatformNativeInterface *native,
 
 	agl_shell_set_background(agl_shell, bg, output);
 
-	/* Delay the   ready signal until after Qt has done all of its own setup
+	/* Delay the ready signal until after Qt has done all of its own setup
 	 * in a.exec() */
 	QTimer::singleShot(500, [agl_shell](){
 		agl_shell_ready(agl_shell);
