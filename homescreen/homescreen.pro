@@ -16,18 +16,35 @@
 TEMPLATE = app
 TARGET = HomeScreen
 QT = qml quick websockets gui-private
-CONFIG += c++11 link_pkgconfig wayland-scanner
+CONFIG += c++11 link_pkgconfig wayland-scanner create_pc create_prl no_install_prl
 DESTDIR = $${OUT_PWD}/../package/root/bin
-PKGCONFIG += qtappfw-weather qtappfw-network qtappfw-bt afb-helpers-qt wayland-client json-c
+PKGCONFIG += qtappfw-weather qtappfw-network qtappfw-bt afb-helpers-qt wayland-client json-c libhomescreen
 
 LIBS += -lhomescreen
 
 CONFIG(release, debug|release) {
     QMAKE_POST_LINK = $(STRIP) --strip-unneeded $(TARGET)
 }
+#Add qt lib
+headers.path = /usr/include
+headers.files = qlibhomescreen.h
+
+target.path = /usr/lib
+
+QMAKE_PKGCONFIG_NAME = qlibhomescreen
+QMAKE_PKGCONFIG_FILE = $${QMAKE_PKGCONFIG_NAME}
+QMAKE_PKGCONFIG_VERSION = $${VERSION}
+QMAKE_PKGCONFIG_DESCRIPTION = A wrapper interface for libhomescreen for Qt
+QMAKE_PKGCONFIG_LIBDIR = ${prefix}/lib
+QMAKE_PKGCONFIG_INCDIR = ${prefix}/include
+QMAKE_PKGCONFIG_REQUIRES = libhomescreen
+QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+#end
 
 SOURCES += \
     src/main.cpp \
+    src/mainkauto.cpp \
+    src/qlibhomescreen.cpp \
     src/statusbarmodel.cpp \
     src/statusbarserver.cpp \
     src/applicationlauncher.cpp \
@@ -38,6 +55,8 @@ SOURCES += \
     src/chromecontroller.cpp
 
 HEADERS  += \
+    src/mainkauto.h \
+    src/qlibhomescreen.h \
     src/statusbarmodel.h \
     src/statusbarserver.h \
     src/applicationlauncher.h \
@@ -64,5 +83,8 @@ RESOURCES += \
 
 WAYLANDCLIENTSOURCES += \
     protocol/agl-shell.xml
+#Add qt lib
+INSTALLS += target headers
+#end
 
 DISTFILES +=
