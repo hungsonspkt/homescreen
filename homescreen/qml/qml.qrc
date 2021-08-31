@@ -82,5 +82,6 @@
         <file>components/OdoInfor.qml</file>
         <file>fonts/UTMAvoBold.ttf</file>
         <file>fonts/UTMAvo.ttf</file>
+        <file>Console.qml</file>
     </qresource>
 </RCC>

@@ -60,6 +60,10 @@ ApplicationWindow {
 
     }
 
+    Console{
+        id: consolelog
+    }
+
     onInterfaceOptionChanged:  setColorOption()
 
     function setColorOption(){

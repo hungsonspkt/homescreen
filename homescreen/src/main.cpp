@@ -390,6 +390,9 @@ int main(int argc, char *argv[])
     // we add it here even if we don't use it
     context->setContextProperty("shell", aglShell);
 
+    context->setContextProperty("_mainkauto",&m_mainkauto);
+
+
     /* instead of loading main.qml we load one-by-one each of the QMLs,
      * divided now between several surfaces: panels, background.
      */
