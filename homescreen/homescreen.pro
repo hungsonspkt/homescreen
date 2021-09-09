@@ -15,7 +15,7 @@
 
 TEMPLATE = app
 TARGET = HomeScreen
-QT = qml quick websockets gui-private
+QT = qml quick websockets gui-private network
 CONFIG += c++11 link_pkgconfig wayland-scanner create_pc create_prl no_install_prl
 DESTDIR = $${OUT_PWD}/../package/root/bin
 PKGCONFIG += qtappfw-weather qtappfw-network qtappfw-bt afb-helpers-qt wayland-client json-c libhomescreen
@@ -52,7 +52,8 @@ SOURCES += \
     src/homescreenhandler.cpp \
     src/shell.cpp \
     src/aglsocketwrapper.cpp \
-    src/chromecontroller.cpp
+    src/chromecontroller.cpp \
+    src/websocketclient.cpp
 
 HEADERS  += \
     src/mainkauto.h \
@@ -65,7 +66,8 @@ HEADERS  += \
     src/shell.h \
     src/aglsocketwrapper.h \
     src/chromecontroller.h \
-    src/constants.h
+    src/constants.h \
+    src/websocketclient.h
 
 OTHER_FILES += \
     README.md

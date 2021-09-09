@@ -4,8 +4,10 @@
 #include <QObject>
 #include <QTimer>
 #include <QString>
+#include <QUrl>
 
 #include "qlibhomescreen.h"
+#include "websocketclient.h"
 
 
 class mainkauto : public QObject
@@ -22,8 +24,12 @@ private slots:
     void addConsoleLog(QString _msg);
     void testConsole();
 
+    void onReceivedDataWebsocket(const QString &message);
+    void onWebsocketDisconnected();
+    void onWebsocketConnected();
 private:
     QLibHomeScreen* m_lib;
+    websocketClient *m_wsclient;
     QTimer *m_timerTestConsole;
 
 

@@ -1,0 +1,50 @@
+#include "websoketclient.h"
+
+websoketClient::websoketClient(const QUrl &wsUrl, QObject *parent) :
+    QObject(parent)
+{
+    connect(&m_webSocket, &QWebSocket::connected, this, &websoketClient::onConnected);
+    connect(&m_webSocket, &QWebSocket::disconnected, this, &websoketClient::onClosed);
+    connect(&m_webSocket, &QWebSocket::textMessageReceived, this, &websoketClient::onTextMessageReceived);
+}
+
+void websoketClient::sendTextMessage(QString message)
+{
+    
+}
+
+void websoketClient::startWs()
+{
+    
+}
+
+void websoketClient::stopWs()
+{
+    
+}
+
+void websoketClient::onError(QAbstractSocket::SocketError error)
+{
+    qDebug() << "WSError: " << QString(error);
+    
+}
+
+void websoketClient::onConnected()
+{
+    emit connected();
+}
+
+void websoketClient::onTextMessageReceived(QString message)
+{
+    emit textMessageReceived(message);
+}
+
+void websoketClient::onClosed()
+{
+    emit closed();
+}
+
+void websoketClient::onReConnect()
+{
+    
+}

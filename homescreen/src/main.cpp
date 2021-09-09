@@ -335,7 +335,7 @@ int main(int argc, char *argv[])
     parser.process(a);
     QStringList positionalArguments = parser.positionalArguments();
 
-    int port = 1700;
+    int port = 1800;
     QString token = "wm";
     QString graphic_role = "homescreen"; // defined in layers.json in Window Manager
 

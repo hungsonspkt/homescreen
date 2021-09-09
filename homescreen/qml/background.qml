@@ -6,10 +6,10 @@ import "components"
 ApplicationWindow {
     flags: Qt.FramelessWindowHint
     id: mainwindow
-//    width: 1920
-//    height: 720
-    width: 720
-    height: 1920
+    width: 1920
+    height: 720
+//    width: 720
+//    height: 1920
     visible: true
     title: qsTr("HMI Auto")
 
@@ -52,11 +52,11 @@ ApplicationWindow {
     DashBoard{
 //       anchors.fill: parent
         anchors.centerIn: parent
-        width: mainwindow.height
-        height: 720
-        rotation: 90
-//        width: mainwindow.width
+//        width: mainwindow.height
 //        height: 720
+//        rotation: 90
+        width: mainwindow.width
+        height: 720
 
     }
 
