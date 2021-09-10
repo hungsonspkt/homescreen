@@ -8,6 +8,7 @@
 
 #include "qlibhomescreen.h"
 #include "websocketclient.h"
+#include "tcpsocket.h"
 
 
 class mainkauto : public QObject
@@ -24,13 +25,17 @@ private slots:
     void addConsoleLog(QString _msg);
     void testConsole();
 
-    void onReceivedDataWebsocket(const QString &message);
-    void onWebsocketDisconnected();
-    void onWebsocketConnected();
+    void onReceivedDataTcpSocket(const QString &message);
+    void onTcpSocketDisconnected();
+    void onTcpSocketConnected();
+    void onConnectingTcpSocket(QString _host, int _port);
+
 private:
     QLibHomeScreen* m_lib;
     websocketClient *m_wsclient;
-    QTimer *m_timerTestConsole;
+    tcpSocket       *m_tcpSocket;
+
+    QTimer *m_timerRunonStartup;
 
 
 };

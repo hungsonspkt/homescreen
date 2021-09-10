@@ -53,6 +53,7 @@ SOURCES += \
     src/shell.cpp \
     src/aglsocketwrapper.cpp \
     src/chromecontroller.cpp \
+    src/tcpsocket.cpp \
     src/websocketclient.cpp
 
 HEADERS  += \
@@ -67,6 +68,7 @@ HEADERS  += \
     src/aglsocketwrapper.h \
     src/chromecontroller.h \
     src/constants.h \
+    src/tcpsocket.h \
     src/websocketclient.h
 
 OTHER_FILES += \

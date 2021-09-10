@@ -4,22 +4,26 @@ mainkauto::mainkauto(QObject *parent) : QObject(parent)
 {
     m_lib = new QLibHomeScreen(this);
 
-    m_timerTestConsole = new QTimer(this);
-    connect(m_timerTestConsole,SIGNAL(timeout()),this,SLOT(testConsole()));
-//    m_timerTestConsole->start(1000);
 
-    QUrl bindingAddress;
-    bindingAddress.setScheme(QStringLiteral("ws"));
-    bindingAddress.setHost(QStringLiteral("localhost"));
-    bindingAddress.setPort(1700);
-    bindingAddress.setPath(QStringLiteral("/api"));
 
-    m_wsclient =  new websocketClient(bindingAddress);
-    QObject::connect(m_wsclient, SIGNAL(textMessageReceived(QString)), this, SLOT(onReceivedDataWebsocket(const QString&)));
-    QObject::connect(m_wsclient, &websocketClient::connected, this, &mainkauto::onWebsocketConnected);
-    QObject::connect(m_wsclient, &websocketClient::closed, this, &mainkauto::onWebsocketDisconnected);
-    m_wsclient->startWs();
-    addConsoleLog("start ws: "+ bindingAddress.toString());
+//    QUrl bindingAddress;
+//    bindingAddress.setScheme(QStringLiteral("ws"));
+//    bindingAddress.setHost(QStringLiteral("localhost"));
+//    bindingAddress.setPort(1700);
+//    bindingAddress.setPath(QStringLiteral("/api"));
+
+//    m_wsclient =  new websocketClient(bindingAddress);
+//    QObject::connect(m_wsclient, SIGNAL(textMessageReceived(QString)), this, SLOT(onReceivedDataWebsocket(const QString&)));
+//    QObject::connect(m_wsclient, &websocketClient::connected, this, &mainkauto::onWebsocketConnected);
+//    QObject::connect(m_wsclient, &websocketClient::closed, this, &mainkauto::onWebsocketDisconnected);
+//    m_wsclient->startWs();
+//    addConsoleLog("start ws: "+ bindingAddress.toString());
+
+    m_tcpSocket = new tcpSocket("localhost",8902);
+    QObject::connect(m_tcpSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(onReceivedDataTcpSocket(const QString&)));
+    QObject::connect(m_tcpSocket, &tcpSocket::connected, this, &mainkauto::onTcpSocketConnected);
+    QObject::connect(m_tcpSocket, &tcpSocket::disconnected, this, &mainkauto::onTcpSocketDisconnected);
+    QObject::connect(m_tcpSocket, SIGNAL(connectingToHost(QString,int)), this, SLOT(onConnectingTcpSocket(QString,int)));
 
 }
 
@@ -33,17 +37,23 @@ void mainkauto::testConsole()
     addConsoleLog("Test console: Hello K-Auto!!");
 }
 
-void mainkauto::onReceivedDataWebsocket(const QString &message)
+void mainkauto::onReceivedDataTcpSocket(const QString &message)
 {
-    addConsoleLog("Data WS Received: " + message);
+    addConsoleLog("Tcp socket data received: " + message);
 }
 
-void mainkauto::onWebsocketDisconnected()
+void mainkauto::onTcpSocketDisconnected()
 {
-    addConsoleLog("WS disconnected");
+    addConsoleLog("Tcp socket disconnected");
 }
 
-void mainkauto::onWebsocketConnected()
+void mainkauto::onTcpSocketConnected()
 {
-    addConsoleLog("WS connected");
+    addConsoleLog("Tcp socket connected");
+}
+
+void mainkauto::onConnectingTcpSocket(QString _host, int _port)
+{
+    addConsoleLog("connecting to Tcp socket: host " + _host + " - port " + QString::number(_port));
+
 }
