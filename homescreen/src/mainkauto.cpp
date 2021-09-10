@@ -19,7 +19,7 @@ mainkauto::mainkauto(QObject *parent) : QObject(parent)
 //    m_wsclient->startWs();
 //    addConsoleLog("start ws: "+ bindingAddress.toString());
 
-    m_tcpSocket = new tcpSocket("localhost",8902);
+    m_tcpSocket = new tcpSocket("127.0.0.1",5000);
     QObject::connect(m_tcpSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(onReceivedDataTcpSocket(const QString&)));
     QObject::connect(m_tcpSocket, &tcpSocket::connected, this, &mainkauto::onTcpSocketConnected);
     QObject::connect(m_tcpSocket, &tcpSocket::disconnected, this, &mainkauto::onTcpSocketDisconnected);
