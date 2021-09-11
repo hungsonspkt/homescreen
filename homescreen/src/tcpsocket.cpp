@@ -34,7 +34,7 @@ void tcpSocket::connectToHost()
     if(!m_tcpSocket.isOpen())
      {
         emit connectingToHost(_host_address, _port_number);
-        m_tcpSocket.connectToHost(_host_address, _port_number);
+        m_tcpSocket.connectToHost(QHostAddress(_host_address), _port_number);
         if (m_tcpSocket.waitForConnected(5000)){
             emit connected();
         }
