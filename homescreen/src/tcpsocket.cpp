@@ -6,10 +6,9 @@ tcpSocket::tcpSocket(const QString &hostAddress, const int &port, QObject *paren
     _port_number(port)
 {
 
-    m_timerRunonStartup = new QTimer(this);
-    connect(m_timerRunonStartup,SIGNAL(timeout()),this,SLOT(connectToHost()));
-    m_timerRunonStartup->setSingleShot(true);
-    m_timerRunonStartup->start(1000);
+    m_timerRetryConnect = new QTimer(this);
+    connect(m_timerRetryConnect,SIGNAL(timeout()),this,SLOT(connectToHost()));
+    m_timerRetryConnect->start(1000);
 
     connect(&m_tcpSocket,SIGNAL(readyRead()),this,SLOT(getMessageReceived()));
     connect(&m_tcpSocket,SIGNAL(disconnected()),this,SLOT(onClosed()));
@@ -26,24 +25,25 @@ void tcpSocket::getMessageReceived()
 void tcpSocket::onClosed()
 {
     emit disconnected();
+    m_timerRetryConnect->start(8000);
 }
 
 void tcpSocket::connectToHost()
 {
-    if(m_tcpSocket.isOpen())
+    m_timerRetryConnect->stop();
+    if(!m_tcpSocket.isOpen())
      {
-         m_tcpSocket.close();
-         emit disconnected();
-     }
-     else{
-         m_tcpSocket.connectToHost(_host_address, _port_number);
-         emit connectingToHost(_host_address, _port_number);
-         if (m_tcpSocket.waitForConnected(5000)){
-             emit connected();
-         }
-         else  {
-             emit disconnected();
+        emit connectingToHost(_host_address, _port_number);
+        m_tcpSocket.connectToHost(_host_address, _port_number);
+        if (m_tcpSocket.waitForConnected(5000)){
+            emit connected();
+        }
+        else  {
+            m_tcpSocket.close();
+            emit disconnected();
 
-         }
+        }
+        m_timerRetryConnect->start(8000);
      }
+
 }

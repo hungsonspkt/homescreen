@@ -28,7 +28,7 @@ private slots:
 
 
 private:
-    QTimer *m_timerRunonStartup;
+    QTimer *m_timerRetryConnects;
 
     QTcpSocket m_tcpSocket;
     QString _host_address;
