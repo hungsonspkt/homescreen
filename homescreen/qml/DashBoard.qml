@@ -128,8 +128,8 @@ Item {
         id: signalturn
         anchors.verticalCenter: connectsignal.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        signalLeft: true
-        signalRight: true
+//        signalLeft: true
+//        signalRight: true
     }
 
 

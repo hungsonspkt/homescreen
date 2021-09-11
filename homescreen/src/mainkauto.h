@@ -19,6 +19,8 @@ public:
 
 signals:
     void add_log_to_console(QString _msg);
+    void update_data_parameter(long long _odo, int _currentSpeed, int _battery, int _leftSignal, int _rightSignal);
+
 public slots:
 
 private slots:

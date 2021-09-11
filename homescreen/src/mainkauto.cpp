@@ -19,7 +19,7 @@ mainkauto::mainkauto(QObject *parent) : QObject(parent)
 //    m_wsclient->startWs();
 //    addConsoleLog("start ws: "+ bindingAddress.toString());
 
-    m_tcpSocket = new tcpSocket("192.168.0.104",5000);
+    m_tcpSocket = new tcpSocket("localhost",5000);
     QObject::connect(m_tcpSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(onReceivedDataTcpSocket(const QString&)));
     QObject::connect(m_tcpSocket, &tcpSocket::connected, this, &mainkauto::onTcpSocketConnected);
     QObject::connect(m_tcpSocket, &tcpSocket::disconnected, this, &mainkauto::onTcpSocketDisconnected);
@@ -40,6 +40,17 @@ void mainkauto::testConsole()
 void mainkauto::onReceivedDataTcpSocket(const QString &message)
 {
     addConsoleLog("Tcp socket data received: " + message);
+
+//    {"odo":12500, "curSpeed":30, "batteryLev":60, rightSignal:0}
+//    signalLight: 0=>left, 1=>right
+
+    QJsonDocument  car_jsd = QJsonDocument::fromJson( message.toUtf8());
+    QJsonObject    car_jsodt = car_jsd.object();
+
+    emit update_data_parameter(car_jsodt["odo"].toVariant().toLongLong(), car_jsodt["curSpeed"].toInt(),
+            car_jsodt["batteryLev"].toInt(), car_jsodt["signalLightLeft"].toInt(), car_jsodt["signalLightRight"].toInt());
+
+
 }
 
 void mainkauto::onTcpSocketDisconnected()

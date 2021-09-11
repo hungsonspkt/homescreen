@@ -21,7 +21,7 @@ Item {
     Timer{
         interval: 1000
         repeat: true
-        running: true
+        running: false
         onTriggered: {
             if(powerdial.currentPower < 50 && testdata ){
                 powerdial.currentPower = powerdial.currentPower  + 5
@@ -92,6 +92,21 @@ Item {
         anchors.topMargin: 40
         currentOdo: 1
         currentTripA: 1
+    }
+
+    Connections{
+        target: _mainkauto
+        onUpdate_data_parameter:{
+            odoinforrow.currentOdo = _odo
+            odorow.speed           = _currentSpeed
+            battery.currentBattery = _battery
+            if(_leftSignal == 1) signalturn.signalLeft = true
+            else signalturn.signalLeft = false
+
+            if(_rightSignal == 1) signalturn.signalRight = true
+            else signalturn.signalRight = false
+
+        }
     }
 
 }
