@@ -52,70 +52,6 @@
 #include<pthread.h>
 #include "mainkauto.h"
 
-pthread_t tid;
-int fdUSB = 0x00;
-
-void printserial()
-{
-	fdUSB = open( "/dev/ttyS0", O_RDWR| O_NOCTTY );
-    struct termios tty;
-	struct termios tty_old;
-	memset (&tty, 0, sizeof tty);
-
-	/* Error Handling */
-	if ( tcgetattr ( fdUSB, &tty ) != 0 ) {
-	   printf("error tcgetattr\n");
-	   return;
-	}
-
-	/* Save old tty parameters */
-	tty_old = tty;
-
-	/* Set Baud Rate */
-	cfsetospeed (&tty, (speed_t)B115200);
-	cfsetispeed (&tty, (speed_t)B115200);
-
-	/* Setting other Port Stuff */
-	tty.c_cflag     &=  ~PARENB;            // Make 8n1
-	tty.c_cflag     &=  ~CSTOPB;
-	tty.c_cflag     &=  ~CSIZE;
-	tty.c_cflag     |=  CS8;
-
-	tty.c_cflag     &=  ~CRTSCTS;           // no flow control
-	tty.c_cc[VMIN]   =  1;                  // read doesn't block
-	tty.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
-	tty.c_cflag     |=  CREAD | CLOCAL;     // turn on READ & ignore ctrl lines
-
-	/* Make raw */
-	cfmakeraw(&tty);
-
-	/* Flush Port, then applies attributes */
-	tcflush( fdUSB, TCIFLUSH );
-	if ( tcsetattr ( fdUSB, TCSANOW, &tty ) != 0) {
-	   printf("flush serial bufer failed\n");
-	   return;
-	}
-	if(fdUSB != 0x00)
-	{
-		write (fdUSB, "K-Auto hello!\n", strlen("K-Auto hello!\n")); 
-	}
-	close(fdUSB);
-	fdUSB = 0x00;
-}
-
-void* doSomeThing(void *arg)
-{
-	usleep(10000000);//10s
-	
-    while(1)
-    {
-    	usleep(1000000);//1s
-    	printserial();
-    }
-
-    return NULL;
-}
-
 static void
 global_add(void *data, struct wl_registry *reg, uint32_t name,
 	   const char *interface, uint32_t)
@@ -309,7 +245,7 @@ int main(int argc, char *argv[])
     mainkauto m_mainkauto;
 
 
-    pthread_create(&tid, NULL, &doSomeThing, NULL);
+    //pthread_create(&tid, NULL, &doSomeThing, NULL);
 
 
     QPlatformNativeInterface *native = qApp->platformNativeInterface();
